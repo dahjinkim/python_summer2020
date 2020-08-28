@@ -12,13 +12,13 @@
 
 # 1- Syntax error
 #   - Errors related to language structure.
-#   - Forgotten symbols, types, or confusing object names. 
+#   - Forgotten symbols, types, or confusing object names.
 #   - Check the ˆ!
-# A syntax error happens when Python can’t understand the command. 
+# A syntax error happens when Python can’t understand the command.
 
 # Example:
 while True print 'Hello world'
-# In [1]: while True print 'Hello world'                                          
+# In [1]: while True print 'Hello world'
 #   File "<ipython-input-1-87563a47f7ef>", line 1
 #     while True print 'Hello world'
 #                    ^
@@ -27,7 +27,7 @@ while True print 'Hello world'
 # 2 - Runtime error
 #   - Errors during the execution of program.
 #   - eg. TypeError, NameError, ZeroDivisionError
-# A run-time error happens when Python understands and runs the command, 
+# A run-time error happens when Python understands and runs the command,
 # but cannot following the instructions.
 
 # Example 1 (NameError):
@@ -53,7 +53,7 @@ print("you cannot add text and numbers" + 12)
 # Example:
 def avg(x, y):
     return x + y / 2
-myAvg = avg(2, 2) 
+myAvg = avg(2, 2)
 print(myAvg)
 
 # Very common, very annoying and, unfortunately, without indication that they exist.
@@ -89,19 +89,19 @@ for i in range(0, 5):
 # We should deal with multiple errors separately
 
 # List of exceptions:
-#  - raise: 
+#  - raise:
 #       to create exceptions or errors
-#  - pass 
+#  - pass
 #       to continue execution without doing anything
-#  - try: 
+#  - try:
 #       tries executing the following
-#  - except TypeError: 
+#  - except TypeError:
 #       runs if a Type Error was raised
-#  - except: 
+#  - except:
 #       runs for all types of errors or exceptions
-#  - else:  
+#  - else:
 #       runs if there was no exception/error
-#  - finally: 
+#  - finally:
 #       always runs
 
 # We can create our own exceptions using classes.
@@ -110,7 +110,7 @@ for i in range(0, 5):
 
 def exception_func(x):
     if x == 0:
-        raise Exception("Cannot divide by 0") 
+        raise Exception("Cannot divide by 0")
     else:
         return 5.0//x
 print(exception_func(1))
@@ -123,7 +123,7 @@ def exception_func(x):
     except ZeroDivisionError:
         ans = "Cannot divide by 0"
     finally:
-        return ans 
+        return ans
 print(exception_func(1))
 print(exception_func(0))
 
@@ -162,30 +162,31 @@ divide_two_things(12, 0)
 divide_two_things(5, 5)
 
 ## Doesn't catch semantic errors, though!
-divide_two_things(10, 3) 
+divide_two_things(10, 3)
 
 # Exceptions are helpful so our code doesn't break!
 # Example 5:
-list1 = [10, 9, 8] 
+list1 = [10, 9, 8]
 list2 = [1, 1, 0]
 # zip() creates an iterator of tuples based on iterable objects (such as lists)
-[print("i value = {} and j value {}".format(i, j)) for i, j in zip(list1, list2)]
+# basically pairs them
+[print("i value = {} and j value {}".format(i, j)) for i, j in zip(list1, list2)
 # We can loop over the two lists using divide_two_things()
 newlist = [divide_two_things(i,j) for i, j in zip(list1, list2)]
 newlist
 
 # Short Class Activity
 # Let's say we don't care about floats... rounding down is cool.
-# What type of error would occur? 
+# What type of error would occur?
 # How can we fix it?
 def print_integer(integer):
     try:
         integer / 1
-    if TypeError:
+    if TypeError: # this should be except TypeError:
         pass
     else:
         return "Here is my integer: " + str(integer)
-    
+
 print_integer(2)
 print_integer('22')
 print_integer('banana')
@@ -203,11 +204,11 @@ def print_integer(integer):
 
 print_integer('22')
 print_integer(1.2)
-print_integer(1)  
+print_integer(1)
 
 
-# We can create your own exception      
-class CustomException(Exception): 
+# We can create your own exception
+class CustomException(Exception):
   def __init__(self, value):
     self.value = value
   def __str__(self):
@@ -215,9 +216,10 @@ class CustomException(Exception):
 
 # use
 raise CustomException(3)
+raise CustomException("Put something else here")
 
 # Our custom exception is the integer cannot be 10, 20, or 30.
-# Since this is a ValueError unique to our situation, 
+# Since this is a ValueError unique to our situation,
 # we need to catch it ourselves.
 def print_integer(integer):
     bad_numbers = [10, 20, 30]
@@ -244,14 +246,17 @@ print_integer(10) # Let check the output
 mylist = [1, 2, 3, 4.5, "6", "7.8", 8, 9, "done"]
 out = [mylist.pop(0)]
 for i in mylist:
-    out.append(out[-1] + i)
+    try:
+        out.append(out[-1] + i)
+    except TypeError:
+        print ("Not a number")
 
 # Answer:
 mylist = [1, 2, 3, 4.5, "6", "7.8", 8, 9, "done"]
 out = [mylist.pop(0)]
 for i in mylist:
     try:
-        out.append(out[-1] + i)    
+        out.append(out[-1] + i)
     except TypeError:
         print('Not a float or int.')
 out
@@ -261,41 +266,47 @@ out
 #---------- break, continue, and else ----------#
 
 # These statements can be handy using while or for loops.
-# - break 
+# - break
 #   stops the loop
-# - continue 
+# - continue
 #   moves on to the next iteration
-# - else 
+# - else
 #   executed only if all iterations are completed
 
 for n in range(2, 10):
-    for x in range(2, n): 
+    for x in range(2, n):
         if n % x == 0:
             print(n, 'equals', x, '*', n//x)
-            continue
-        else:
-            print(n, 'is a prime number')
+            break # continue
+        # else: None
+    else: # The loop comes here if, after all iteration, it returned nothing above
+        print(n, 'is a prime number')
 
 # We want to only print "n is a prime number" once
-# We want to avoid repetition if 2x3 = 6, 
+# We want to avoid repetition if 2x3 = 6,
 # we don't need to print 3x2 = 6
 # How we solve it?
+# now returns '9 is a prime number'
+# how to solve this?
+# '9 is a prime number' occurs because 9 % 2 != 0,
+# but it does not go to 9 % 3 because of the added break
+
 
 # Solution:
 for n in range(2, 10):
-    for x in range(2, n): 
+    for x in range(2, n):
         if n % x == 0:
             print(n, 'equals', x, '*', n//x)
             break
     else:
         print(n, 'is a prime number')
 
-# See lecture 1 for more on pass, break, and continue 
+# See lecture 1 for more on pass, break, and continue
 
 #---------- Unit Test ----------#
 
 # Write tests before / alongside your code
-# Tests the smallest possible unit of your code 
+# Tests the smallest possible unit of your code
 # Forces code structure
 # Allows easier integration of multiple functions
 # Much easier to return to code:
@@ -306,28 +317,28 @@ for n in range(2, 10):
 
 # We can use assert to test our code within our script
 assert sum([1, 2, 3]) == 6 # It will not return anything if it is correct
-assert sum([2, 3]) == 6
+assert sum([2, 3]) == 6 # AssertionError
 assert avg(2, 2) == 2
 assert avg(2, 2) == 4
 
 # We can also use a test runner, such as unittest
 
-import unittest # unit testing module 
+import unittest # unit testing module
 from myscript import * # the script you want to test
 
 # Mock example
-class mytest(unittest.TestCase): 
+class Mytest(unittest.TestCase):
 
     def test_one(self):
         self.assertEqual("result", script.func(input))
 
     def test_two(self):
         thing1 = script.func(input1)
-        thing2 = script.func(input2) 
+        thing2 = script.func(input2)
         self.assertNotEqual(thing1 , thing2)
-    
+
     # if you want to run the test with this script
-    if __name__ == '__main__': 
+    if __name__ == '__main__':
         unittest.main()
 
 # Example
@@ -335,7 +346,7 @@ class mytest(unittest.TestCase):
 
 
 
-# Functions to test 
+# Functions to test
 # Method                      Checks that
 # assertEqual(a, b)           a == b
 # assertNotEqual(a, b)        a != b
@@ -355,7 +366,7 @@ class mytest(unittest.TestCase):
 # We need the keyword "with" when using self.assertRaises():
     with self.assertRaises(Exception):
         outfunction()
-# "with" is a keyword to use a context manager 
+# "with" is a keyword to use a context manager
 # See: https://www.geeksforgeeks.org/context-manager-in-python/
 
 # More about unittest at: https://docs.python.org/3/library/unittest.html
@@ -364,17 +375,17 @@ class mytest(unittest.TestCase):
 # Copyright of the original version:
 
 # Copyright (c) 2014 Matt Dickenson
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
