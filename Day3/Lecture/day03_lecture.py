@@ -166,7 +166,11 @@ divide_two_things(10, 3)
 
 # Exceptions are helpful so our code doesn't break!
 # Example 5:
+<<<<<<< HEAD
 list1 = [10, 9, 8]
+=======
+list1 = [15, 9, 8] 
+>>>>>>> upstream/master
 list2 = [1, 1, 0]
 # zip() creates an iterator of tuples based on iterable objects (such as lists)
 # basically pairs them
@@ -249,7 +253,11 @@ for i in mylist:
     try:
         out.append(out[-1] + i)
     except TypeError:
+<<<<<<< HEAD
         print ("Not a number")
+=======
+        print('It is not a number')
+>>>>>>> upstream/master
 
 # Answer:
 mylist = [1, 2, 3, 4.5, "6", "7.8", 8, 9, "done"]
@@ -274,6 +282,7 @@ out
 #   executed only if all iterations are completed
 
 for n in range(2, 10):
+<<<<<<< HEAD
     for x in range(2, n):
         if n % x == 0:
             print(n, 'equals', x, '*', n//x)
@@ -281,6 +290,14 @@ for n in range(2, 10):
         # else: None
     else: # The loop comes here if, after all iteration, it returned nothing above
         print(n, 'is a prime number')
+=======
+    for x in range(2, 5): 
+        if 5 % x == 0:
+            print(5, 'equals', x, '*', 5//x)
+            break
+    else:
+        print(5, 'is a prime number')
+>>>>>>> upstream/master
 
 # We want to only print "n is a prime number" once
 # We want to avoid repetition if 2x3 = 6,
@@ -290,6 +307,7 @@ for n in range(2, 10):
 # how to solve this?
 # '9 is a prime number' occurs because 9 % 2 != 0,
 # but it does not go to 9 % 3 because of the added break
+
 
 
 # Solution:
@@ -323,11 +341,20 @@ assert avg(2, 2) == 4
 
 # We can also use a test runner, such as unittest
 
+<<<<<<< HEAD
 import unittest # unit testing module
 from myscript import * # the script you want to test
 
 # Mock example
 class Mytest(unittest.TestCase):
+=======
+
+import unittest # unit testing module 
+from myscript import * # the script you want to test
+
+# Mock example
+class Mytest(unittest.TestCase): 
+>>>>>>> upstream/master
 
     def test_one(self):
         self.assertEqual("result", script.func(input))
