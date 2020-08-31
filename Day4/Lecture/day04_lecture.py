@@ -36,10 +36,10 @@
 <h1>My first heading </h1>
 <p>My first paragraph. </p>
 
-</body> 
+</body>
 </html>
 
-# Go to https://polisci.wustl.edu/people/88/ 
+# Go to https://polisci.wustl.edu/people/88/
 # Click right, then View Page Source
 
 # See https://www.w3schools.com/tags/default.asp for a list wih HTML tags
@@ -70,10 +70,10 @@ import urllib.request
 # Open a web page
 web_address = 'https://polisci.wustl.edu/people/88/'
 web_page = urllib.request.urlopen(web_address)
-web_page
+web_page # terrible to read
 
 # Parse it
-soup = BeautifulSoup(web_page.read())
+soup = BeautifulSoup(web_page.read()) # we are modifying the web_page object
 print(soup.prettify()) # enable us to view how tags are nested in the document
 
 # Find all cases of a certain tag 'a'
@@ -93,18 +93,18 @@ all_a_tags[34].attrs  # returns a dictionary with the attributes
 # Note: because all_a_tags is a list, we need to index the element.
 # If we are interested in the first instance of the tag 'a,' we can use
 soup.find('a')
-soup.find('a').attrs 
+soup.find('a').attrs
 
 # We can use a loop to get all the data
 l = {"class" : [], "href" : []} # create a dictionary
-for p in range(34,60):
-  # try:
+for p in range(34,60): # this breaks because there isn't enough info, so use try and except
+  try:
     # extract all attrs 'class' from the all_a_tags
-    l["class"].append(all_a_tags[p].attrs["class"]) 
+    l["class"].append(all_a_tags[p].attrs["class"])
     # extract all attrs 'href' from the all_a_tags
-    l["href"].append(all_a_tags[p].attrs["href"]) 
-  # except KeyError:
-    # continue
+    l["href"].append(all_a_tags[p].attrs["href"])
+  except KeyError:
+      continue
 print(l)
 
 # We can check all the attrs, using keys()
@@ -113,26 +113,28 @@ all_a_tags[34]['href']
 all_a_tags[34]['class']
 
 
-# If we are interested only in the attributes 'class' and 'card' 
+# If we are interested only in the attributes 'class' and 'card'
 # nested within tag 'a', we can specific this in our first call:
 soup.find_all('a', {'class' : "card"}) # returns a list
 
 # It is very common that you will need to go level by level to access
 # nested tags. Here is an example:
 sections = soup.find_all('div') # get all tags 'div'
-len(sections) # check the size of the object 
+len(sections) # check the size of the object
 sections[2].a # FIRST 'a' tag within the 'div' tag OR:
-sections[2].find('a') # FIRST 'a' tag within the 'div' tag
+sections[2].find('a') # FIRST 'a' tag within the 'div' tag: same thing as above
 sections[2].find_all('a') ## ALL 'a' tags within the 'div' tag
 
 
-# Creating a tree of objects. 
+# Creating a tree of objects.
 # We use it to get all data for on instance of 'div'
 all_fields = soup.find_all('div')
 randy = all_fields[34]
 
 # heading
-randy.find_all("h3") 
+randy.find_all("h3")
+# can't do randy.find_all('h3').text
+# can do either: randy.find('h3').text OR randy.find_all('h3')[0].text
 
 # Gives a list of all children (objects nested within the object)
 randy.contents #
@@ -141,8 +143,11 @@ randy.contents #
 randy.children # Remember: iterators are objects that we use in loops
 
 # Print all nested elements within randy
-for i, child in enumerate(randy.children):
-  print("Child %d: %s" % (i,child))
+for i, child in enumerate(randy.children): # enumerate creates sequence of numbers for the number of objects?
+  print("Child %d: %s" % (i,child)) # prints CHild 0 : ..., Child 1 : ...
+
+for child in randy.children: # enumerate creates sequence of numbers for the number of objects?
+  print("Child : %s" % (child)) # prints Child : ..., Child : ...
 
 # Siblings (Example):
 
@@ -159,8 +164,8 @@ for i, child in enumerate(randy.children):
 #   </body>
 # </html>
 
-# The <b> tag and the <c> tag are at the same level: 
-# they’re both direct children of the same tag. 
+# The <b> tag and the <c> tag are at the same level:
+# they’re both direct children of the same tag.
 
 # We can also print the next tag at the same level as the 'h3' tag
 for sib in randy.next_siblings:
@@ -172,7 +177,7 @@ for sib in randy.previous_siblings:
 # What is happening?
 
 # randy does not have previous siblings.
-<article class="faculty-post"> 
+<article class="faculty-post">
 <div class="image"> # randy = all_fields[34]
   <img alt="Headshot of Randall Calvert" src="URL"> # Children of randy
   <h3> # Children of randy
@@ -198,6 +203,7 @@ for sib in all_fields[36].previous_siblings:
 # Beautiful Soup documentation
 # http://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
+soup.find_all(id = 'photo-header') # the way to do it with soup?
 
 # Crawlers are incredibly fast, but also easier to detect and block
 # You can incorporate some pauses to avoid detection
@@ -205,7 +211,7 @@ import random
 import time
 
 # Script will pause for a n seconds
-time.sleep(random.uniform(1, 5))
+time.sleep(random.uniform(1, 5)) # use both short and long breaks
 print('Pause Ended')
 
 
@@ -214,7 +220,7 @@ print('Pause Ended')
 # Selenium is a “remote driver” of your favorite browser
 # Therefore, you can pretty much simulate behavior of a human “surfing the web”
 # With the right tricks, the likelihood of tracking and blocking your “bot” decreases.
-# It also offers flexibility in terms of “unknown” items: 
+# It also offers flexibility in terms of “unknown” items:
 #     you can even look by name of buttons in the page
 # There are some downsides though...
 #   - It is slower
@@ -227,7 +233,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup as bs
 from selenium.webdriver.common.keys import Keys
 
-# pip3 install selenium
+pip install selenium # install selenium
 
 # We will create a function to start our remote session
 def start_chrome(webpage, silent = False):
@@ -248,6 +254,8 @@ search = driver.find_element_by_name('q')
 search.send_keys('WUSTL Political Science')
 # press Enter/Return
 search.submit()
+
+driver.find_element_by_class_name('r').click() # goes to the webpage; 'r' is where the hyperlink is located, not the name 'LC201b DKV0Md'
 # We close the browser
 driver.close()
 
@@ -274,7 +282,7 @@ email = []
 # run the function for the first 2 cases
 for i in range(0, 2):
   page.append(url + mps[i]['href'])
-  driver = start_chrome(page[i], silent = True)
+  driver = start_chrome(page[i], silent = True) # the brower doesn't pop up
   html = driver.page_source
   driver.close()
   soup = BeautifulSoup(html)
@@ -283,17 +291,22 @@ for i in range(0, 2):
   party.append(soup.find(class_ = 'office').find_all('li')[1].text)
   email.append(soup.find(class_ = 'contactinfo first notexternal').find('a', href = True)['href'].split(":")[1])
 
+# find_element_by_xpath(): copy xpath from brower and put it in the function
+
 
 # More on Selenium:
 # https://selenium-python.readthedocs.io/locating-elements.html
+
+# Check if the website is down:
+# downforeveryoneorjustme.com
 
 
 #---------- Reading and writing files ----------#
 
 # 1 - Reading
 
-import sys
-import os
+import sys # to read files
+import os # this package allows you to change directory easily
 
 # Set WD
 os.chdir('/Users/pcunhasilva/Dropbox/PythonClass/Summer2020/Day4/Lecture')
@@ -312,55 +325,55 @@ with open('readfile.txt') as f:
 
 # More efficiently, we can loop over the file object
 # (i.e. we don't need the variable lines)
-with open('readfile.txt') as f:   
+with open('readfile.txt') as f:
   for l in f:
     print(l)
-    
-    
+
+
 # We can also manually open and close files,
 # now we need to handle exceptions and close
 # I never do this
 f =  open('readfile.txt')
 print(f.read())
-f.close()
+f.close() # if we do this way, you need to remember to close the file
 
-# Why not to do it manually?
+# Why NOT to do it manually?
 # In any programming language, the usage of resources like file operations
-# or database connections is very common. But these resources are limited in supply. 
+# or database connections is very common. But these resources are limited in supply.
 
 
-# When a file is opened, a file descriptor 
+# When a file is opened, a file descriptor
 # (a number that identifies an open file)
-# is consumed which is a limited resource. 
+# is consumed which is a limited resource.
 # Only a certain number of files can be opened by a process at a time.
-# In Python, it can be achieved by the usage of context managers 
+# In Python, it can be achieved by the usage of context managers
 # which facilitate the proper handling of resources.
 
 # Example, not using with:
-file_descriptors = [] 
-for x in range(1000): 
-    file_descriptors.append(open('readfile.txt')) 
+file_descriptors = []
+for x in range(1000):
+    file_descriptors.append(open('readfile.txt')) # this crashes
 
 # using with:
-file_descriptors = [] 
+file_descriptors = []
 for x in range(1000):
-  with open("readfile.txt") as f:    
+  with open("readfile.txt") as f:
       data = f.read()
-      file_descriptors.append(data)
+      file_descriptors.append(data) # this does not crash
 
-# Source: https://www.geeksforgeeks.org/context-manager-in-python/ 
+# Source: https://www.geeksforgeeks.org/context-manager-in-python/
 
 # 2 - Writing .txt
 
 # Writing files is easy,
-# We need to use the option 'w'
+# We need to use the option 'w' (to write the file)
 with open('test_writefile.txt', 'w') as f:
   ## wipes the file clean and opens it
   f.write("Hi guys.")
   f.write("Does this go on the second line?")
-  f.writelines(['a\n', 'b\n', 'c\n'])
+  f.writelines(['a\n', 'b\n', 'c\n']) # this will save the file 'test_writefile.txt' to the directory
 
-# We use 'a' to append new information to it
+# We use 'a' to append new information to it to avoid overwriting
 with open('test_writefile.txt', 'a') as f:
   f.write("I got appended!")
 
@@ -372,35 +385,35 @@ import csv
 
 # Open a file stream and create a CSV writer object
 with open('test_writecsv.csv', 'w') as f:
-  my_writer = csv.writer(f)
+  my_writer = csv.writer(f) # need to create an object
   for i in range(1, 100):
-    my_writer.writerow([i, i-1])
+    my_writer.writerow([i, i-1]) # i goes in the first column, i-1 goes in the second column
 
 
 # Now read in the csv
 with open('test_writecsv.csv', 'r') as f:
   my_reader = csv.reader(f)
-  mydat = []
+  mydat = [] # create a list to store the data
   for row in my_reader:
     mydat.append(row)
 print(mydat)
 
-    
+
 # Adding column names
 with open('test_csvfields.csv', 'w') as f:
   my_writer = csv.DictWriter(f, fieldnames = ("A", "B"))
   my_writer.writeheader()
   for i in range(1, 100):
-    my_writer.writerow({"B":i, "A":i-1})
-    
-# Reading the new file    
+    my_writer.writerow({"B":i, "A":i-1}) # alphabetical order?
+
+# Reading the new file
 with open('test_csvfields.csv', 'r') as f:
   my_reader = csv.DictReader(f)
   for row in my_reader:
     print(row)
 
 # We may find useful to save webpages for collecting data
-def download_page(address, filename, wait = 5):
+def download_page(address, filename, wait = 5): # wait 5 seconds
   time.sleep(random.uniform(0,wait))
   page = urllib.request.urlopen(address)
   page_content = page.read()
@@ -424,7 +437,7 @@ soup.prettify()
 
 # Google Chrome is better to track nodes and page sources
 # Inspect the source and get to know your document/website!
-# Use the ’Copy Xpath’ command if you’re having troubles 
+# Use the ’Copy Xpath’ command if you’re having troubles
 # (Find it in "Inspect" in Google Chrome)
 # Use time breaks to avoid being blocked
 # Check the Terms of Service (whether you obey them or not)
@@ -433,17 +446,17 @@ soup.prettify()
 # Copyright of the original version:
 
 # Copyright (c) 2014 Matt Dickenson
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -451,4 +464,3 @@ soup.prettify()
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
