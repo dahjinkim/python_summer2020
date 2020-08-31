@@ -4,6 +4,9 @@ class Portfolio():
         self.stock = stock
         self.mutualfund = mutualfund
 
+    def __str__():
+        return 'cash: {}\nstock: {}\nmutual fund: {}'.format(self.cash, self.stock, self.mutualfund)
+
     def addCash(): # adds cash
 
     def withdrawCash(): # removes cash
