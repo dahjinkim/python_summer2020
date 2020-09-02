@@ -16,13 +16,13 @@ os.chdir('/Users/pcunhasilva/Dropbox/PythonClass/Summer2020/Day5/Lecture')
 
 # Regular expressions are useful to extract information from text.
 # Set of “rules” to identify or match a particular sequence of characters.
-# Most text in ASCII: letters, digits, punctuation and symbols 
+# Most text in ASCII: letters, digits, punctuation and symbols
 # (but unicode can also be used)
 # In Python, mainly through library re.
 
 import re
 
-# Load example text 
+# Load example text
 # read in example text, remember:
 # readlines makes a list of each line break in file
 with open("obama-nh.txt", "r") as f:
@@ -38,7 +38,7 @@ print(text[2])
 
 # Join into one string
 # What could we have done at the outset instead?
-alltext = ''.join(text) 
+alltext = ''.join(text)
 
 # OR
 with open("obama-nh.txt", "r") as f:
@@ -47,16 +47,16 @@ with open("obama-nh.txt", "r") as f:
 
 # Useful functions from re module:
 
-# re.findall: Return all non-overlapping matches of pattern 
+# re.findall: Return all non-overlapping matches of pattern
 #             in string, as a list of strings
 # re.split: Split string by the occurrences of pattern.
-# re.match: If zero or more characters at the beginning of 
-#           string match the regular expression pattern, 
+# re.match: If zero or more characters at the beginning of
+#           string match the regular expression pattern,
 #           return a corresponding match object.
-# re.search: Scan through string looking for the first location where 
-#            the regular expression pattern produces a match, 
+# re.search: Scan through string looking for the first location where
+#            the regular expression pattern produces a match,
 #            and return a corresponding match object.
-# re.compile: Compile a regular expression pattern into a regular 
+# re.compile: Compile a regular expression pattern into a regular
 #             expression object, which can be used for matching using i
 #             ts match(), search() and other methods
 
@@ -70,7 +70,7 @@ re.findall(r"\n", alltext) # all breaklines
 
 # we use "r" to signal the start of a pattern.
 # "r" is Python's raw string notation for regular expression patterns
-# used instead of escape character "\" 
+# used instead of escape character "\"
 "\n"
 print("\n")
 
@@ -86,99 +86,95 @@ print(r"\\n")
 #---------- Basic special characters ----------#
 
 # \d digits
-re.findall(r"\d", alltext) 
+re.findall(r"\d", alltext)
 # \D non-digits
-re.findall(r"\D", alltext) 
+re.findall(r"\D", alltext)
 # all instances of the char in []
-re.findall(r"[a]", alltext) 
+re.findall(r"[a]", alltext)
 # all instances of the from char 1 to char 2 in []
-re.findall(r"[a-d]", alltext) 
+re.findall(r"[a-d]", alltext) # all a-b-c-d
 # all char, ^ except for of the from char 1 to char 2 in []
-re.findall(r"[^a-d]", alltext) 
+re.findall(r"[^a-d]", alltext)
 # all char and digits (alphanumeric)
-re.findall(r"[a-zA-Z0-9]", alltext) 
-# \w alphanumeric, one word char 
+re.findall(r"[a-zA-Z0-9]", alltext)
+# \w alphanumeric, one word char
 re.findall(r"\w", alltext) # same as re.findall(r"[a-zA-Z0-9]", alltext)
 # \W non-alphanumeric, one non-word char
-re.findall(r"\W", alltext) # same as re.findall(r"[^a-zA-Z0-9]", alltext)
-# \s whitespace
-re.findall(r"\s", alltext) 
+re.findall(r"\W", alltext) # same as re.findall(r"[^a-zA-Z0-9]", alltext): linebreaks and empty spaces, punctuation
+# \s whitespace + linebreaks
+re.findall(r"\s", alltext)
 # \S non-whitespace
-re.findall(r"\S", alltext) 
+re.findall(r"\S", alltext)
 # . any char (include white spaces)
-re.findall(r".", alltext) 
+re.findall(r".", alltext)
 # \ is an escape character (. has a special use)
-re.findall(r"\.", alltext) 
+re.findall(r"\.", alltext) # this returns only the period
 
 
 # all digits
-re.findall(r"\d", alltext) 
+re.findall(r"\d", alltext)
 # Match succeeds independently of the presence of the search string
-re.findall(r"\d*", alltext).remove('') 
+re.findall(r"\d*", alltext).remove('')
 # r = re.findall(r"\d*", alltext)
 # while '' in r:
   # r.remove('')
-# r  
+# r
 # At least one occurrence for the match to succeed ( 1 or many)
 re.findall(r"\d+", alltext)
-# Makes the preceding item optional. 
-re.findall(r"\d?", alltext) 
+# Makes the preceding item optional.
+re.findall(r"\d?", alltext)
 # {x} exactly x times (numbers with exact number of digits)
-re.findall(r"\d{3}", alltext) 
-re.findall(r"\d{2}", alltext) 
-re.findall(r"\d{1}", alltext) 
+re.findall(r"\d{3}", alltext)
+re.findall(r"\d{2}", alltext)
+re.findall(r"\d{1}", alltext)
 # {x, y} from x to y times (numbers with exact number of digits from x to y)
-re.findall(r"\d{1,3}", alltext) 
+re.findall(r"\d{1,3}", alltext)
 
 # More here: https://www.regular-expressions.info/refrepeat.html
 # And hear: https://www.debuggex.com/cheatsheet/regex/python
 
 # Short Exercise: How would we grab 10/10 as it appears in text?
 x = "Hi 10/10 hello 9/18 asdf 9/9"
+re.findall(r"\d{2}/\d{2}", x) # two digits / two digits
+re.findall(r"10/10", x) # only 10/10
 
-
-
-
-
-
-
-
-
-
-
+x = "Hi 10/10 hello 9/18 asdf 19/19, 12/10"
+re.findall(r"1[0-2]/10", x) # will get 10/10, 11/10, 12/10
 
 # Answer
-re.findall(r"\d{2}/\d{2}", x) 
+re.findall(r"\d{2}/\d{2}", x)
 
 
 ## Explain what's happening:
 x = "American's lov\we McDonalds"
-re.findall(r"\w", x) 
+re.findall(r"\w", x)
 # \w is Regular Expression Character Classes
 x
 # We need to add a escape
-re.findall(r"\\w", x) 
+re.findall(r"\\w", x)
 
 # get any word that starts with America
-re.findall(r"America[a-z]*", alltext) 
+re.findall(r"America[a-z]*", alltext)
 
 # get any complete word starting with an upper-case letter
-re.findall(r"([A-Z]+\w*)", alltext) 
-# () group of characters 
+re.findall(r"([A-Z]+\w*)", alltext)
+# () group of characters
 # starting with a letter A to Z
 # + the next n characters
+# \w all none whitespace
+# * to the end
 
 #---------- re.split() ----------#
 
 # splits at digits, deletes digits
-re.split(r'\d', alltext) 
+re.split(r'\d', alltext)
 
 # splits at non-digits, deletes char
-re.split(r'\D', alltext) 
+re.split(r'\D', alltext)
 
 # What is this doing?
-re.split(r'\.', alltext) # remove separator
-re.split(r'(\.)', alltext) # using () we split and keep separator
+re.split(r'\.', alltext) # remove separator: splitting by period, removing period
+re.split(r'(\.)', alltext) # using () we split and keep separator (period) as a separate element
 
 
 #---------- re.compile() ----------#
@@ -191,14 +187,16 @@ keyword = re.compile(r"America[a-z]*")
 # search file for keyword in line by line version
 for i, line in enumerate(text):
   if keyword.search(line):
-  	print(i)
-    print(line) 
+  	print(i) # relates to enumerate
+    print(line)
 # enumerate() allows us to loop over something and have an automatic counter
 
 # Create a regex object
 pattern = re.compile(r'\d')
-pattern.findall(alltext)
-pattern.split(alltext)
+# pattern = re.compile(r'can?') = will search for 'ca/can'
+pattern.findall(alltext) # find all digits in alltext
+# same as: re.findall(r'can?', alltext)
+pattern.split(alltext) # split at digits
 
 # Can also search across lines in single strings with re.MULTILINE
 mline = 'bin\nban\ncan'
@@ -206,7 +204,7 @@ print(mline)
 
 # ^ check the start of the string
 # looking for b
-pattern = re.compile(r'^b\w*') # "^" words starting in b of any size
+pattern = re.compile(r'^b\w*') # "^" words starting in b of any size (in the beginning of a string)
 pattern.findall(mline)
 
 # looking for b in multilines
@@ -216,7 +214,10 @@ pattern.findall(mline)
 # Now, back to the speech as a single string...
 # Explain the difference between these two lines
 re.findall(r'^b\w*', alltext, re.MULTILINE)
+# MULTILINE treats each line as separate string and searches for words starting in b of any size
 re.findall(r'^b\w*', alltext)
+# this takes the entire speech as one long speech, and searches for the string that begins with b-word
+# so it essentially looks at the beginning of the first line
 
 # re.MULTILINE treats each line as its own string
 # for the sake of the pattern
@@ -231,27 +232,29 @@ re.findall(r'^.*\.$', alltext, re.MULTILINE)
 # \. if the line has a period
 # $ if the line ends with a period
 
+# [^asdf] : except for asdf
+# '^a' : string starts with a
 
 #---------- search, match, and groups ----------#
 t = '12 twelve'
 
 # find a number and a word separated by a whitespace
-pattern = re.compile(r'(\d*)\s(\w*)')
+pattern = re.compile(r'(\d*)\s(\w*)')  # why parenthesis? to return as separate element?
 # create an instance
-tsearch = pattern.search(t) 
+tsearch = pattern.search(t)
 # tuple of all groups
-tsearch.groups() 
+tsearch.groups()
 # the complete match
-tsearch.group(0) 
+tsearch.group(0) # print as complete string
 # the first group
-tsearch.group(1) 
+tsearch.group(1)
 # the second group
-tsearch.group(2) 
+tsearch.group(2)
 
 # Similar to using () alone, but the text
 # matched by the group is then accessible
 # (?P<Y>...)  Capturing group named Y
-pattern = re.compile(r'(?P<number>\d*)\s(?P<name>\w*)')
+pattern = re.compile(r'(?P<number>\d*)\s(?P<name>\w*)') # return as dictionary
 tsearch = pattern.search(t)
 tsearch.groups()
 tsearch.groupdict()
@@ -270,10 +273,10 @@ pattern.search(mytext).group(2)
 pattern.match(r"12 24").groups()
 pattern.match(r"a12 24").groups()
 
-
+# pattern.match(r"12 24")L this one itself is an object; you need groups() to return the matched elements
 
 #---------- Naive Bayes ----------#
-# Some docs for this library: 
+# Some docs for this library:
 # http://nltk.org/api/nltk.classify.html#module-nltk.classify.naivebayes
 
  # pip install nltk
@@ -295,8 +298,8 @@ len(names) # N of observations
 train_size = 5000
 
 # Split train and test objects
-train_names = names[:train_size]
-test_names = names[train_size:]
+train_names = names[:train_size] # indexing until 5000
+test_names = names[train_size:] # indexing after 5000
 
 # A simple feature: Get the last letter of the name
 def g_features1(word):
@@ -306,11 +309,12 @@ def g_features1(word):
 def return_two():
   return 5, 10
 
-# When a method returns two values, we can use this format: 
-x, y = return_two()
+# When a method returns two values, we can use this format:
+x, y = return_two() # x: 5, y: 10
 
 # Loop over names, return tuple of dictionary and label
 train_set = [(g_features1(n), g) for (n, g) in train_names]
+# (n, g) <- n: name, g: gender; trainset is now returning the outcome of g_features1 + gender
 test_set = [(g_features1(n), g) for (n,g) in test_names]
 
 # Run the naive Bayes classifier for the train set
@@ -372,7 +376,7 @@ for (name, label) in test_names:
   if guess != label:
     prob = classifier.prob_classify(g_features2(name)).prob(guess)
     errors.append((label, guess, prob, name))
-
+# errors[0:5]
 
 for (label, guess, prob, name) in sorted(errors):
   print('correct={} guess={} prob={:.2f} name={}'.format(label, guess, prob, name))
@@ -447,17 +451,17 @@ classifier.show_most_informative_features(10)
 # Copyright of the original version:
 
 # Copyright (c) 2014 Matt Dickenson
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -465,8 +469,3 @@ classifier.show_most_informative_features(10)
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-
-
-
-
