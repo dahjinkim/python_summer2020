@@ -109,6 +109,7 @@ re.findall(r"\S", alltext)
 re.findall(r".", alltext)
 # \ is an escape character (. has a special use)
 re.findall(r"\.", alltext) # this returns only the period
+re.findall(r"\bthe\b", alltext) # \b is boundary of a word
 
 
 # all digits
