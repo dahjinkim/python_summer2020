@@ -13,7 +13,7 @@ os.chdir('/Users/pcunhasilva/Dropbox/PythonClass/Summer2020/Day6/Lecture')
 #---------- APIs ----------#
 
 # API stands for:
-# 	- Application (a piece of software, a computer program, or a server) 
+# 	- Application (a piece of software, a computer program, or a server)
 # 	- Programming (what you’re doing with python)
 # 	- Interface (how you’re communicating)
 
@@ -22,12 +22,12 @@ os.chdir('/Users/pcunhasilva/Dropbox/PythonClass/Summer2020/Day6/Lecture')
 # 	- Every Internet page is stored on a remote server
 # 	- When you go to a website, a request goes out to their remote server
 # 	- Your browser (the client) receives the response
-# 	- When surfing the web, the API is the part of the remote server 
+# 	- When surfing the web, the API is the part of the remote server
 #	  that receives requests and sends responses
-# 	- Informative explanation: 
+# 	- Informative explanation:
 #	  https://towardsdatascience.com/what-is-an-api-and-how-does-it-work-1dccd7a8219e
 
-# How Developers Use It: 
+# How Developers Use It:
 # 	- The app’s functionality requires photography (think SnapChat)
 # 	- iPhone devs already made camera software & efficient translations of inputs to outputs
 # 	- Devs can use that software instead of writing it from scratch! (gains from trade)
@@ -50,7 +50,7 @@ os.chdir('/Users/pcunhasilva/Dropbox/PythonClass/Summer2020/Day6/Lecture')
 #		6 - Legislative data (ex. UK and Brazil Parliaments)
 
 
-# All APIs are different, and each has its own learning curve 
+# All APIs are different, and each has its own learning curve
 # Some require account keys:
 # 	- Keep these private
 # Most have request limits
@@ -59,7 +59,7 @@ os.chdir('/Users/pcunhasilva/Dropbox/PythonClass/Summer2020/Day6/Lecture')
 # 	- R also offers API wrappers
 # 	- Look for these to ease your coding burden
 
-
+# use dir() to see what methods can be applied
 
 
 #---------- Pollster API ----------#
@@ -75,7 +75,7 @@ import webbrowser # to open our browser
 import pollster # API wrapper
 
 # Start the API
-api = pollster.Api()
+api = pollster.Api() #type(api) = pollster.api
 
 # not sure what a tag is!
 tags = api.tags_get() ## list of dictionary-looking objects
@@ -83,7 +83,7 @@ tags = api.tags_get() ## list of dictionary-looking objects
 # check out the slugs, anyway
 for t in tags:
 	print(t.slug)
-# slug is a unique identifier 
+# slug is a unique identifier
 
 # 2016 president looks good
 charts = api.charts_get(tags = '2016-president')
@@ -100,24 +100,25 @@ webbrowser.open(charts.items[0].url)
 
 
 # We want to find the first question that was asked at more than 30 times
-# The next() function returns the next item from the iterator. 
-# It will stop when it finds the first question with at least 31 instances 
+# The next() function returns the next item from the iterator.
+# It will stop when it finds the first question with at least 31 instances
 question_slug = next(c.question.slug for c in charts.items if c.question.n_polls > 30)
+# break the loop as soon as we get the next item
 
 # We could also use it, but it is less efficient
 question_slug2 = [c.question.slug for c in charts.items if c.question.n_polls > 30][0]
 
 
-# grab polls with get request that matches our question_slug 
+# grab polls with get request that matches our question_slug
 polls = api.polls_get(
   question = question_slug,
   sort = 'created_at'
 )
-polls
+polls #dir(polls); you cannot index this object
 
 # Grabbing info from these polls
 # How they were field? Internet, Phone?
-[p.mode for p in polls.items]
+[p.mode for p in polls.items] # refer to documentation for .mode attribute
 
 # Get all chart slugs for charts built using this question
 [p.poll_questions[0].question.charts for p in polls.items]
@@ -156,16 +157,16 @@ import importlib # to import file
 import sys # add directory to system PATH
 
 # system PATH:
-# The system path is a list of folders, separated by a semicolon, 
-# that identifies the folders that the system should search when looking 
+# The system path is a list of folders, separated by a semicolon,
+# that identifies the folders that the system should search when looking
 # for files that are called from the Run dialog box, command line, or other processes.
 # Source: https://bit.ly/2Z4KAzP
 
 # Add directory where your key is to system PATH
-sys.path.insert(0, '/Users/pcunhasilva/Dropbox/Projects/Secrets/')
+sys.path.insert(0, '/Users/jinki/Documents/API keys')
 
 # Import items from file
-imported_items = importlib.import_module('start_googleAPI')
+imported_items = importlib.import_module('start_google')
 
 # Copy client to an object named gmaps
 gmaps = imported_items.client
@@ -236,15 +237,14 @@ def grab_latlng(place):
 l = [grab_latlng(i) for i in stl_places]
 
 # Use zip to assign lat and long to different objects
-# zip(* ) means that the object l will be unpacked, 
+# zip(* ) means that the object l will be unpacked,
 # making each of its elements a separate argument
-attraction_lats, attraction_lons = zip(*l)
+attraction_lats, attraction_lons = zip(*l) #unzipping the tupple (it's L, not 1)
 attraction_lats
 attraction_lons
 
 # Add points to our plot
 plot1.scatter(lats = attraction_lats, lngs = attraction_lons,
-	'black',
 	size = 40,
 	marker = True)
 
@@ -254,10 +254,16 @@ plot1.draw("my_map.html")
 
 #---------- Twitter API ----------#
 
+import importlib # to import file
+import sys # add directory to system PATH
+
+# if there was problem loading the module, fix it and restart the Python
+# you cannot re-load the module
+
 # pip install tweepy
 import tweepy
 # http://docs.tweepy.org/en/v3.8.0/api.html
-
+sys.path.insert(0, '/Users/jinki/Documents/API keys')
 twitter = importlib.import_module('start_twitter')
 api = twitter.client
 
@@ -275,7 +281,7 @@ for i in limit["resources"]["tweets"].keys():
 
 # Create user objects
 don = api.get_user('realDonaldTrump')
-don # biiiig object 
+don # biiiig object
 
 # Check type and methods
 type(don)
@@ -290,15 +296,15 @@ print(don.location)
 # Check his tweets
 don.status # last tweet
 don.status.text # text
-don.status._json # .json file
-don.statuses_count # tweet ID
+don.status._json # .json file # recommend to save it as .json, not as list (easier to read later)
+don.statuses_count # tweet ID (amount of tweets he has)
 
 # Check his number of followers
 don.followers_count
 
 # Gives back user objects
 don_20 = don.followers() ## only the first 20!
-don_20
+don_20 # crazy object
 len(don_20)
 
 # Screen names
@@ -318,20 +324,20 @@ for follower_id in don.followers_ids()[0:50]:
 	user = api.get_user(follower_id)
 	if user.location == '':
 		print('Not available')
-	else: 
+	else:
 		print(user.location)
 
 # Normally count = 200 is limit, let's go around that.
 
-# By default, each method returns the first page, 
+# By default, each method returns the first page,
 # which usually contains a few dozen items.
 # We can define the pagination manually to get more results
 don_statuses = []
-for p in range(1, 10):
+for p in range(1, 10): # first 1-9 pages
 	# extend gets the entire tweet
 	don_statuses.extend(api.user_timeline(id = 'realDonaldTrump', page = i, count = 20))
 don_statuses
-len(don_statuses)
+len(don_statuses) # the length will be different everytime; can't figure out why so far
 
 # How was it tweeted?
 source = [x.source for x in don_statuses]
@@ -344,11 +350,11 @@ source
 # Cursor performs pagination easily for you
 # iterate through the first 20 statuses in the timeline
 histweets20 = [] ## tweet objects
-for status in tweepy.Cursor(api.user_timeline, id = 'realDonaldTrump').items(20):
-    histweets20.append(status)    
+for status in tweepy.Cursor(api.user_timeline, id = 'realDonaldTrump').items(20): #.items() specifies the number of objects
+    histweets20.append(status)
 len(histweets20)
 
-# iterate through all of the status 
+# iterate through all of the status
 histweets = [] ## tweet objects
 for status in tweepy.Cursor(api.user_timeline, id = 'realDonaldTrump').items():
     histweets.append(status)
@@ -419,17 +425,17 @@ one[0]
 # Copyright of the original version:
 
 # Copyright (c) 2014 Matt Dickenson
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
