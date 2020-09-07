@@ -69,6 +69,10 @@ for i in range(0, len(issues)):
             issues[i][j] = issues[i][j].text
         except IndexError:
             continue
+# Patrick's solution
+# issues2 = [re.sub('[^a-zA-Z0-9\\\/ #]|_', '', \
+#    issues[i]) for i in range(0, len(issues))]
+
 
 # clean up published dates to only include dates
 dates = []
