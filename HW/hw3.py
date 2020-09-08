@@ -122,7 +122,54 @@ print(most_popular_friend.followers_count) # 122336786 followers
 
 
 ##### Two degrees of Separation #####
+##### Limit searches to layman and expert #####
 # 1) Among the followers of @WUSTLPoliSci and their followers, who is the most active?
+
+# limit wustl followers to layman and expert
+limited_followers = []
+# for loop
+for follower in wustl_followers:
+    user = api.get_user(follower)
+    if user.followers_count <= 1000: # if up to 1000 followers
+        limited_followers.append(follower) # assign layman
+    else:
+        continue
+len(limited_follower) # 366 layman and expert followers
+
+# get followers of limited followers
+follower_follower = []
+for follower in limited_follower:
+    user = api.get_user(follower)
+    follower_follower.append(user.followers_ids())
+
+# limit follower_follower to layman and expert
+limited_fofollower = []
+for follower in follower_follower:
+    user = api.get_user(follower)
+    if user.followers_count <= 1000: # if up to 1000 followers
+        limited_fofollower.append(follower) # assign layman
+    else:
+        continue
+
+# combine followers of WUSTLPoliSci and followers of followers
+# and check for duplicates
+full_followers = limited_follower + limited_fofollower
+set_full_followers = set(full_followers)
+unique_full_followers = list(set_full_followers)
+
+# get most active user
+activity = []
+for ids in unique_full_followers: # iterate over follower ids
+    user = api.get_user(ids) # get each user
+    activity.append(user.statuses_count) # collect their number of tweets
+most_active_id = unique_full_followers[activity.index(max(activity))] # index by the maximum number of tweets
+most_active_follower = api.get_user(most_active_id) # get user info
+
+# most active follower info
+print(most_active_follower.id) # 810933338
+print(most_active_follower.name) # 十勝餡粒々@アメリカPh.D.リベンジ
+print(most_active_follower.screen_name) # @ tubuann_only
+print(most_active_follower.statuses_count) # 109681 tweets
 
 
 # 2) Among the friends of @WUSTLPoliSci and their friends, who is the most active?
