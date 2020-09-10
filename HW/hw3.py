@@ -8,54 +8,51 @@ sys.path.insert(0, '/Users/jinki/Documents/API keys')
 twitter = importlib.import_module('start_twitter')
 api = twitter.client
 
-# get wustl user and follower info
+# get wustl user info
 wustl = api.get_user('WUSTLPoliSci')
-wustl_followers = wustl.followers_ids()
+
+# get wustl followers info
+wustl_followers = []
+for follower in tweepy.Cursor(api.followers, id = 'WUSTLPoliSci').items(1000): # get upto 1000 followers
+    wustl_followers.append(follower) # should I fix this to followers()?
 len(wustl_followers) # 469 followers
 
-
-##### One degree of separation #####
-# 1) Among the followers of @WUSTLPoliSci who is the most active?
-# most active follower loop
-activity = []
-for ids in wustl_followers: # iterate over follower ids
-    user = api.get_user(ids) # get each user
-    activity.append(user.statuses_count) # collect their number of tweets
-most_active_id = wustl_followers[activity.index(max(activity))] # index by the maximum number of tweets
-most_active_follower = api.get_user(most_active_id) # get user info
-
-# most active follower info
-print(most_active_follower.id) # 810933338
-print(most_active_follower.name) # 十勝餡粒々@アメリカPh.D.リベンジ
-print(most_active_follower.screen_name) # @ tubuann_only
-print(most_active_follower.statuses_count) # 109681 tweets
-
-
-# 2) Among the followers of @WUSTLPoliSci who is the most popular,
-# i.e. has the greatest number of followers?
-# most popular follower loop
-followers = []
-for ids in wustl_followers: # iterate over follower ids
-    user = api.get_user(ids) # get each user
-    followers.append(user.followers_count) # collect number of followers
-most_popular_id = wustl_followers[followers.index(max(followers))] # index by the maximum number of followers
-most_popular_follower = api.get_user(most_popular_id) # get user info
-
-# most popular follower info
-print(most_popular_follower.id) # 84653850
-print(most_popular_follower.name) # Brendan Nyhan
-print(most_popular_follower.screen_name) # @ BrendanNyhan
-print(most_popular_follower.followers_count) # 81127 followers
-
-
-# 3) Among the friends of @WUSTLPoliSci, i.e. the users she is following,
-# who are the most active layman, expert, and celebrity?
-# get friends of WUSTLPoliSci
+# get wustl friend info
 wustl_friends = []
 for friend in tweepy.Cursor(api.friends, id = 'WUSTLPoliSci').items(1000): # get upto 1000 friends
     wustl_friends.append(friend)
 len(wustl_friends) # 158 friends
 
+# function for most active user
+def most_active_user(userlist):
+    activity = []
+    for user in userlist:
+        activity.append(user.statuses_count)
+    most_active_user = userlist[activity.index(max(activity))]
+    return "user id: {}, user name: {}, twitter handle: {}, tweets: {}, followers: {}".format(most_active_user.id, most_active_user.name, most_active_user.screen_name, most_active_user.statuses_count, most_active_user.followers_count)
+
+# function for most popular user:
+def most_popular_user(userlist):
+    followers = []
+    for user in userlist:
+        followers.append(user.followers_count)
+    most_popular_user = userlist[followers.index(max(followers))]
+    return "user id: {}, user name: {}, twitter handle: {}, tweets: {}, followers: {}".format(most_popular_user.id, most_popular_user.name, most_popular_user.screen_name, most_popular_user.statuses_count, most_popular_user.followers_count)
+
+##### One degree of separation #####
+# 1) Among the followers of @WUSTLPoliSci who is the most active?
+most_active_user(wustl_followers)
+# 'user id: 810933338, user name: 十勝餡粒々@アメリカPh.D.リベンジ,
+# twitter handle: tubuann_only, tweets: 109698, followers: 1439'
+
+# 2) Among the followers of @WUSTLPoliSci who is the most popular,
+# i.e. has the greatest number of followers?
+most_popular_user(wustl_followers)
+# 'user id: 84653850, user name: Brendan Nyhan,
+# twitter handle: BrendanNyhan, tweets: 90590, followers: 81126'
+
+# 3) Among the friends of @WUSTLPoliSci, i.e. the users she is following,
+# who are the most active layman, expert, and celebrity?
 # separate friends into 3 types (Layman, Expert, Celebrity)
 layman = []
 expert = []
@@ -69,56 +66,35 @@ for friend in wustl_friends:
         celebrity.append(friend) # assign celebrity
 
 # function for finding the most active friend in each type
-def most_active(types):
+def most_active_by_type(types):
     activity = []
     if types == "layman":
-        for user in layman: # iterate over layman users
-            activity.append(user.statuses_count) # collect number of tweets
-            active_user = layman[activity.index(max(activity))] # find the most active user
+        print('layman')
+        return most_active_user(layman)
     elif types == "expert":
-        for user in expert: # iterate over expert users
-            activity.append(user.statuses_count)
-            active_user = expert[activity.index(max(activity))]
+        print('expert')
+        return most_active_user(expert)
     elif types == "celebrity":
-        for user in expert: # iterate over celebrity users
-            activity.append(user.statuses_count)
-            active_user = celebrity[activity.index(max(activity))]
+        print('celebrity')
+        return most_active_user(celebrity)
     else:
-        print("Enter a valid type: layman, expert, celebrity")
-    return print(types + "\nid: {}\nname: {}\nscreen_name: {}\ntweets: {}\nfollowers: {}".format(active_user.id, active_user.name, active_user.screen_name, active_user.statuses_count, active_user.followers_count))
-
+        return print("Enter a valid type: layman, expert, celebrity")
 # find most active layman, expert, and celebrity
-most_active("layman")
-# id: 764260766
-# name: usman falalu
-# screen_name: usmanfalalu1
-# tweets: 1445
-# followers: 30
-most_active("expert")
-# id: 1064533471
-# name: Tim... we're doomed
-# screen_name: prof_nokken
-# tweets: 12577
-# followers: 719
-most_active("celebrity")
-# id: 48028479
-# name: WashU Residential Life
-# screen_name: washureslife
-# tweets: 519
-# followers: 1033
+most_active_by_type("layman")
+# 'user id: 764260766, user name: usman falalu,
+# twitter handle: usmanfalalu1, tweets: 1445, followers: 30'
+most_active_by_type("expert")
+# user id: 1064533471, user name: Tim... we're doomed,
+# twitter handle: prof_nokken, tweets: 12577, followers: 719
+most_active_by_type("celebrity")
+# 'user id: 807095, user name: The New York Times,
+# twitter handle: nytimes, tweets: 406707, followers: 47255333'
 
 
 # 4) Among the friends of @WUSTLPoliSci, who is the most popular?
-followers = []
-for friend in wustl_friends:
-    followers.append(friend.followers_count)
-most_popular_friend = wustl_friends[followers.index(max(followers))]
-
-# most popular friend info
-print(most_popular_friend.id) # 813286
-print(most_popular_friend.name) # Barack Obama
-print(most_popular_friend.screen_name) # @ BarackObama
-print(most_popular_friend.followers_count) # 122336786 followers
+most_popular_user(wustl_friends)
+# 'user id: 813286, user name: Barack Obama,
+# twitter handle: BarackObama, tweets: 15919, followers: 122336786'
 
 
 ##### Two degrees of Separation #####
@@ -128,48 +104,59 @@ print(most_popular_friend.followers_count) # 122336786 followers
 # limit wustl followers to layman and expert
 limited_followers = []
 # for loop
-for follower in wustl_followers:
-    user = api.get_user(follower)
+for user in wustl_followers:
     if user.followers_count <= 1000: # if up to 1000 followers
-        limited_followers.append(follower) # assign layman
+        limited_followers.append(user) # assign layman
     else:
         continue
-len(limited_follower) # 366 layman and expert followers
+len(limited_followers) # 366 layman and expert followers
 
-# get followers of limited followers
-follower_follower = []
-for follower in limited_follower:
-    user = api.get_user(follower)
-    follower_follower.append(user.followers_ids())
-
-# limit follower_follower to layman and expert
-limited_fofollower = []
-for follower in follower_follower:
-    user = api.get_user(follower)
-    if user.followers_count <= 1000: # if up to 1000 followers
-        limited_fofollower.append(follower) # assign layman
-    else:
+# get layman and expert followers of limited followers
+ffollowers = []
+for user in limited_followers:
+    try:
+        for follower in tweepy.Cursor(api.followers, id = user.id).items(5000): # get upto 5000 friends
+            if follower.followers_count <= 1000:
+                ffollowers.append(follower)
+    except tweepy.TweepError:
         continue
+len(ffollowers)
 
 # combine followers of WUSTLPoliSci and followers of followers
-# and check for duplicates
-full_followers = limited_follower + limited_fofollower
-set_full_followers = set(full_followers)
-unique_full_followers = list(set_full_followers)
+full_followers = limited_followers + ffollowers
+len(ffollowers)
 
 # get most active user
-activity = []
-for ids in unique_full_followers: # iterate over follower ids
-    user = api.get_user(ids) # get each user
-    activity.append(user.statuses_count) # collect their number of tweets
-most_active_id = unique_full_followers[activity.index(max(activity))] # index by the maximum number of tweets
-most_active_follower = api.get_user(most_active_id) # get user info
-
-# most active follower info
-print(most_active_follower.id) # 810933338
-print(most_active_follower.name) # 十勝餡粒々@アメリカPh.D.リベンジ
-print(most_active_follower.screen_name) # @ tubuann_only
-print(most_active_follower.statuses_count) # 109681 tweets
+most_active_user(full_followers)
 
 
 # 2) Among the friends of @WUSTLPoliSci and their friends, who is the most active?
+# limit wustl friends to layman and expert
+limited_friends = []
+# for loop
+for user in wustl_friends:
+    if user.followers_count <= 1000: # if up to 1000 followers
+        limited_friends.append(user) # assign layman
+    else:
+        continue
+len(limited_friends) # 75 layman and expert friends
+
+# get layman and expert friends of friends
+ffriends = []
+for user in limited_friends:
+    try:
+        for friend in tweepy.Cursor(api.friends, id = user.id).items(5000): # get upto 5000 friends
+            if friend.followers_count <= 1000:
+                ffriends.append(friend)
+    except tweepy.TweepError:
+        continue
+len(ffriends) # 9174 layman and expert friends of friends
+
+# add limited_friends and ffriends
+full_friends = limited_friends + ffriends
+len(full_friends) # 9249 friends and friends of friends
+
+# find the most active user
+most_active_user(full_friends)
+# 'user id: 18701550, user name: El Yunke Obeezy,
+# twitter handle: MissAir, tweets: 148141, followers: 671'
