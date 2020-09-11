@@ -1,3 +1,9 @@
+"""
+Class: Python 2020
+Homework Assignment 3
+Author: Jin Kim
+"""
+
 # import necessary packages
 import importlib
 import sys
@@ -65,28 +71,15 @@ for friend in wustl_friends:
     else: # more than 1000 followers
         celebrity.append(friend) # assign celebrity
 
-# function for finding the most active friend in each type
-def most_active_by_type(types):
-    activity = []
-    if types == "layman":
-        print('layman')
-        return most_active_user(layman)
-    elif types == "expert":
-        print('expert')
-        return most_active_user(expert)
-    elif types == "celebrity":
-        print('celebrity')
-        return most_active_user(celebrity)
-    else:
-        return print("Enter a valid type: layman, expert, celebrity")
+
 # find most active layman, expert, and celebrity
-most_active_by_type("layman")
+most_active_user(layman)
 # 'user id: 764260766, user name: usman falalu,
 # twitter handle: usmanfalalu1, tweets: 1445, followers: 30'
-most_active_by_type("expert")
+most_active_user(expert)
 # user id: 1064533471, user name: Tim... we're doomed,
 # twitter handle: prof_nokken, tweets: 12577, followers: 719
-most_active_by_type("celebrity")
+most_active_user(celebrity)
 # 'user id: 807095, user name: The New York Times,
 # twitter handle: nytimes, tweets: 406707, followers: 47255333'
 
@@ -120,14 +113,14 @@ for user in limited_followers:
                 ffollowers.append(follower)
     except tweepy.TweepError:
         continue
-len(ffollowers)
 
 # combine followers of WUSTLPoliSci and followers of followers
 full_followers = limited_followers + ffollowers
-len(ffollowers)
 
 # get most active user
 most_active_user(full_followers)
+# 'user id: 871399252815204354, user name: Terry Egan,
+# twitter handle: Terryg1979, tweets: 256668, followers: 115'
 
 
 # 2) Among the friends of @WUSTLPoliSci and their friends, who is the most active?
