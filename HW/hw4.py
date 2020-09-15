@@ -64,24 +64,24 @@ print(merge_sort(number_list)) # 2, 5, 7, 9, 13, 25, 87
 
 
 ###### Simulation
-# 100 random list generating function with size(N)
+# random lists generating function with size(N)
 # between numbers 0 and 10000
-def ran_list(size):
+def ran_list(size, number = 100):
     randomList = []
-    for i in range(0, 100):
+    for i in range(0, number):
         randomList.append(random.sample(range(0, 10000), size))
     return randomList
 
 # Time calculating function for sorting algorithms
 # We will simulate 100 times for each size
-def sort_time(size):
+def sort_time(size, number = 100):
     # create empty list for measuring time
     bubble_time = []
     merge_time = []
     # make 100 random lists of a set size to simulate with
-    lists = ran_list(size)
+    lists = ran_list(size, number)
     # make a for loop to simulate
-    for list in range(0, 100):
+    for list in range(0, number):
         # measuring time for bubble sort
         # record start time
         start_time = datetime.datetime.now()
@@ -114,7 +114,7 @@ x = range(1, 1001)
 bubble_average = []
 merge_average = []
 for i in x:
-    times = sort_time(i)
+    times = sort_time(i, number = 100)
     bubble_time_average = sum(times[0])/100
     merge_time_average = sum(times[1])/100
     bubble_average.append(bubble_time_average)
@@ -127,4 +127,8 @@ plt.plot(x, merge_average, label = 'Merge Sort: O(nlog_{2}n)')
 plt.title("How different algorithm complexities affect runtime")
 # axis label
 plt.ylabel("Average runtime in microseconds")
-plt.xlabel("N (size)")
+plt.xlabel("length of list")
+# legends
+plt.legend(loc = 'upper left')
+# save
+plt.savefig('runtime_comparison.png')
